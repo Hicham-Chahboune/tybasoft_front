@@ -1,0 +1,70 @@
+
+<mat-grid-list cols="4" rowHeight="60px" class="title">
+
+    <mat-grid-tile [colspan]="1">
+        <div class="col-6">
+            <button mat-button (click)="back()" style="background-color: #7b1fa2;color: #fff; border-radius: 5px;">
+                Retour au commande
+            </button>
+        </div>
+    </mat-grid-tile>
+
+</mat-grid-list>
+
+<mat-grid-list cols="3" rowHeight="60px" class="header">
+    <mat-grid-tile [colspan]="1"><label>Réference: </label><strong>{{commande?.commandeReference}}</strong></mat-grid-tile>
+    <mat-grid-tile [colspan]="1"><label>date:</label><strong>{{commande?.date | date:'dd-MM-yyyy'}}</strong></mat-grid-tile>
+    <mat-grid-tile [colspan]="1"><label>Total:</label><strong>{{commande?.total}}</strong></mat-grid-tile>
+</mat-grid-list>
+
+<div class="grid-container">
+    <button mat-button [disabled]="reglementsTotal >= commande.total" 
+            style="margin-bottom: 10px;background-color: #7b1fa2;color: #fff;padding: 5px 30px 5px 20px; border-radius: 10px;"
+            (click)="addReglement()">
+        <i class="fal fa-plus-circle fa-2x"></i>
+        Ajouter un reglement
+    </button>
+    <table *ngIf="this.reglements.length !== 0" class=" col-12 table table-striped table-hover">
+        <thead>
+            <tr style="color: rgb(56, 24, 131); height: 25px; font-size: 16px; font-weight: bold;">
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Echeance</th>
+                <th>Type</th>
+                <th>Banque</th>
+                <th>Etat</th>
+                <th>pris par</th>
+                <th class="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let reglement of reglements" style="text-align: center; font-size: 12px; height: 20px;">
+                <td>{{reglement?.dateCreation | date: 'dd-MM-yyyy'}}</td>
+                <td>{{reglement?.montant?.toFixed(2) }}DH</td>
+                <td>{{reglement?.echeance | date: 'dd-MM-yyyy'}}</td>
+                <td>{{reglement?.type?.nom}}</td>
+                <td>{{reglement?.banque?.label}}</td>
+                <td>{{reglement?.etat?.label}}</td>
+                <td>{{reglement?.prisPar}}</td>
+                
+                <td>
+                    <a (click)="editReglement(reglement)" mat-icon-button color="primary"
+                        style="height: 25px;" aria-label="Editer">
+                        <mat-icon>edit</mat-icon>
+                    </a>
+
+                    <button (click)="deleteReglement(reglement)" mat-icon-button color="primary" style="height: 25px;">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="warnning" *ngIf="search_warning">
+        <h3 class="p-warnning"><i class="px-3 fas fa-exclamation-circle fa-lg"></i> {{ search_warning }}</h3>
+    </div>
+    <div *ngIf="this.reglements.length === 0" class="warnning">
+        <h3 class="p-warnning"> <i class="px-3 fas fa-exclamation-circle fa-lg"></i> Aucun réglement pour le moment </h3>
+    </div>
+</div>

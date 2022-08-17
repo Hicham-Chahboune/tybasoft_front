@@ -1,0 +1,68 @@
+<div class="p-5">
+  <p-card>
+    <h1><strong>Ajouter une commande</strong></h1>
+
+    <!-- <p-table [value]="articles" selectionMode="single" [(selection)]="selectedArticle" dataKey="articleReference" responsiveLayout="scroll"> -->
+      <form name="form" [formGroup]="ligneCommandeForm">
+        <div class="p-field mb-2 mt-2">
+            <label for="reference"><strong>Reference :</strong> </label><br>
+            <input type="text" pInputText id="reference" formControlName="reference" autofocus />
+            <small class="p-invalid" style="color:red;" *ngIf="!ligneCommandeForm.controls['reference'].valid && ligneCommandeForm.controls['reference'].touched">Ce champ est obligatoire</small>
+        </div>
+        <div class="p-field mb-4">
+          <label for="date"><strong>Date de la commande:</strong></label><br>
+          <input type="date" pInputText id="date" formControlName="date" autofocus />
+          <small class="p-invalid" style="color:red;" *ngIf="!ligneCommandeForm.controls['date'].valid && ligneCommandeForm.controls['date'].touched">Ce champ est obligatoire</small>
+      </div>
+      <div class="p-field mb-4">
+        <label for="type"><strong>Type de la commande:</strong></label><br>
+        <p-dropdown id="type" formControlName="type" [options]="types" [(ngModel)]="selectedType" placeholder="Selectionner le type" [showClear]="true"></p-dropdown>
+      </div>
+    </form>
+      <p-table  #dt [value]="clients" [rows]="8" selectionMode="single" dataKey="id" [paginator]="true" [globalFilterFields]="['nom']"
+        [(selection)]="selectedClient" [rowHover]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <div class="flex  justify-content-between flex-wrap card-container purple-container">
+                  <div class="flex flex-column align-items-start justify-content-center">
+                      <h1 class="p-m-0">Clients</h1>
+                      <span class="p-input-icon-left">
+                          <i class="pi pi-search"></i>
+                          <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search..." />
+                      </span>
+                  </div>
+                  <div class="flex flex-column align-items-start justify-content-center">
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"></button>
+                  </div>
+              </div>
+
+            </div>
+        </ng-template>
+
+
+
+      <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="reference">External Ref<p-sortIcon field="articleReference"></p-sortIcon></th>
+            <th pSortableColumn="date">Nom complet<p-sortIcon field="nom"></p-sortIcon></th>
+            <th pSortableColumn="status">tel <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+            <th pSortableColumn="total">ville <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+            <th pSortableColumn="client.prenom">nbCommands <p-sortIcon field="prixChat"></p-sortIcon></th>
+      </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-client>
+          <tr [pSelectableRow]="client">
+            <td>{{client.externalRef}}</td>
+            <td>{{client.nomComplet}}</td>
+            <td>{{client.tel}}</td>
+            <td>{{client.ville.label}}</td>
+            <td>{{client.nbCommands}}</td>
+      </tr>
+      </ng-template>
+  </p-table>
+
+  <button pButton type="button" class="mt-2" [disabled]="!ligneCommandeForm.valid || !selectedClient"  label="Ajouter" (click)="ajouterCommande()"></button>
+  </p-card>
+</div>
+

@@ -1,0 +1,163 @@
+.grid-container {
+    margin: 20px 10px;
+  }
+  .mat-h1{
+    margin: 20px;
+  }
+  .dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  
+  .warnning{
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .p-warnning{
+    background-color: rgb(238, 213, 101);
+    color: black;
+    padding: 1rem;
+    width: 50%;
+    text-align: center;
+  }
+  
+  .mat-select{
+    border:1px solid #7b1fa2;
+    outline: none;
+    width: 120px;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: #ece7d9;
+    font-weight: normal;
+    font-size: small;
+  }
+  
+  .search-field{
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #7b1fa2;
+    font-size: small;
+    width: 160px;
+    outline: none;
+  }
+  
+  .more-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+  
+  .dashboard-card-content {
+    text-align: center;
+  }
+  .demo-table {
+    width: 100%;
+  }
+  
+  .mat-column-demo-position {
+    width: 32px;
+    border-right: 1px solid currentColor;
+    padding-right: 24px;
+    text-align: center;
+  }
+  
+  .mat-column-demo-name {
+    padding-left: 16px;
+    font-size: 20px;
+  }
+  
+  .mat-column-demo-weight {
+    font-style: italic;
+  }
+  
+  .mat-column-demo-symbol {
+    width: 32px;
+    text-align: center;
+    font-weight: bold;
+  }
+  th{
+    font-size: 120%;
+    text-align: center;
+  }
+
+  button{
+    position: page;
+    margin-right: 0.2rem;
+  }
+  
+  table{
+    width: 140%;
+ 
+  }
+  tbody {
+  overflow: auto;
+}
+
+th{
+  border: 1px solid rgb(243, 173, 93);
+  background-color: #ffde92;
+}
+td{
+  border: 1px solid rgb(243, 173, 93);
+  vertical-align: middle;
+  text-align: center;
+}
+
+.wrapper{
+  
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.file-upload{
+    cursor: pointer;
+    height:58px;
+    width:58px;
+    border-radius: 100px;
+    position:relative;
+    
+    display:flex;
+    justify-content:center;
+    align-items: center;  
+
+    /* border:4px solid #FFFFFF; */
+    overflow:hidden;
+    background-image: linear-gradient(to bottom, #7b1fa2 50%, #FFFFFF 50%);
+    background-size: 100% 200%;
+    transition: all 1s;
+    color: #FFFFFF;
+    font-size:100px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+ }
+    
+input[type='file']{
+
+      height:100%;
+      width:100%;
+      position:absolute;
+      top:0;
+      left:0;
+      opacity:0;
+      cursor:pointer;
+
+}
+
+
+#table-scroll {
+  height: 70vh;
+  overflow:auto;
+  margin-top:30px;
+  margin-bottom: 5px;
+}

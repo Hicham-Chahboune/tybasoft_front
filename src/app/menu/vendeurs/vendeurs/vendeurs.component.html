@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+
+<div class="card">
+  <h1 class="p-m-0">Vendeur</h1>
+
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" [routerLink]="['add']" routerLinkActive="router-link-active" ></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" ></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+          <p-fileUpload mode="basic"  label="Import" chooseLabel="Import" class="mr-2 inline-block " (onSelect)="onFileSelected($event)" #fileUpload></p-fileUpload>
+          <!-- <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload> -->
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" ></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table  #dt [value]="vendeurs" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','status']" styleClass="p-datatable-sm"
+         [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="reference">External Ref<p-sortIcon field="articleReference"></p-sortIcon></th>
+                <th pSortableColumn="date">Nom complet<p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="status">Tel prof<p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="client.prenom">Tel urgence <p-sortIcon field="prixChat"></p-sortIcon></th>
+                <th pSortableColumn="status">Mail<p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th></th>
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-vendeur>
+             <tr>
+                <td>
+                    <p-tableCheckbox [value]="vendeur"></p-tableCheckbox>
+                </td>
+                <td>{{vendeur.externalRef}}</td>
+                <td>{{vendeur.nomComplet}}</td>
+                <td>{{vendeur.telProfess}}</td>
+                <td>{{vendeur.telUrgence}}</td>
+                <td>{{vendeur.mailProfess}}</td>
+                <td>
+                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" ></a>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                </td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+

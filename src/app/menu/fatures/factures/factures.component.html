@@ -1,0 +1,54 @@
+<p-toast></p-toast>
+
+<div class="card">
+  <h1 class="p-m-0">Factures</h1>
+
+    <p-table  #dt [value]="factures" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','status']" styleClass="p-datatable-sm"
+         [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th pSortableColumn="reference">Numero<p-sortIcon field="articleReference"></p-sortIcon></th>
+                <th pSortableColumn="client.prenom">Date<p-sortIcon field="prixChat"></p-sortIcon></th>
+                <th pSortableColumn="date">Client<p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="status">Document d'origine <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="total">Total <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th pSortableColumn="total">TVA <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th pSortableColumn="total">Status <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th></th>
+                <th></th>
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-facture>
+             <tr>
+
+                <td>{{facture.id}}</td>
+                <td>{{facture.date | date}}</td>
+                <td>{{facture.commande.client.prenom}} {{facture.commande.client.nom}}</td>
+                <td>{{facture.commande.reference}}</td>
+                <td>{{facture.commande.total}}</td>
+                <td>{{facture.tva}} %</td>
+                <td>{{facture.paymentType}}</td>
+                <td>
+                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="facture.id"></a>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+

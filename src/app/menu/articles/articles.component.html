@@ -1,0 +1,82 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedArticles()" [disabled]="!selectedArticles || !selectedArticles.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic"  label="Import" chooseLabel="Import" class="mr-2 inline-block " (onSelect)="onFileSelected($event)" #fileUpload></p-fileUpload>
+            <!-- <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload> -->
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="exportExcel()"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table  #dt [value]="articles" [rows]="20" [paginator]="true" [globalFilterFields]="['reference','nom']" styleClass="p-datatable-sm"  styleClass="p-datatable-sm"
+        [(selection)]="selectedArticles" [rowHover]="true" dataKey="reference"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h1 class="p-m-0">Articles</h1>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="reference">Reference <p-sortIcon field="reference"></p-sortIcon></th>
+                <th pSortableColumn="nom">nom <p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="prixAchat">P/Achat <p-sortIcon field="prixAchat"></p-sortIcon></th>
+                <th pSortableColumn="prixVenteSurPlace">P/SurPlace <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="prixVenteParCommande">P/Commande <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th pSortableColumn="prixVenteCasa">P/Casa <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th pSortableColumn="prixVenteComptoire">P/Comptoire <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-article>
+             <tr>
+                <td>
+                    <p-tableCheckbox [value]="article"></p-tableCheckbox>
+                </td>
+                <td>{{article.reference}}</td>
+                <td>{{article.nom}}</td>
+                <td>{{article.prixAchat}}</td>
+                <td>{{article.prixVenteSurPlace}}</td>
+                <td>{{article.prixVenteParCommande}}</td>
+                <td>{{article.prixVenteCasa}}</td>
+                <td>{{article.prixVenteComptoire}}</td>
+                <!-- <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+                <td><span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span></td> -->
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editArticle(article)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteArticle(article)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{articles ? articles.length : 0 }} articles.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<div *ngIf="dialogEdit">
+    <app-edit-article [articles]="articles" [article]="article" (destroyEdit)="closeEditArticle($event)"></app-edit-article>
+</div>
+<div *ngIf="articleDialog">
+  <app-add-article [articles]="articles" (destroyAdd)="closeAddArticle($event)"></app-add-article>
+</div>
+
+
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+

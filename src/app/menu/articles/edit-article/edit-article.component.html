@@ -1,0 +1,53 @@
+
+
+
+ <form name="form" [formGroup]="ArticleForm">
+  <p-dialog (onHide)="hideDialog()" [responsive]="true" [(visible)]="show" [style]="{width: '450px'}" header="Article Details" [modal]="true" styleClass="p-fluid">
+         <ng-template pTemplate="content">
+
+             <div class="p-field">
+              <label for="articleReference"><strong>Description :</strong></label>
+              <input type="text" pInputText id="description" formControlName="description" autofocus />
+              <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['description'].valid && ArticleForm.controls['description'].touched">Ce champ est obligatoire</small>
+            </div>
+
+             <div class="p-field">
+                 <label for="name"><strong>Nom :</strong></label>
+                 <input type="text" pInputText id="name" formControlName="nom" required autofocus />
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['nom'].valid && ArticleForm.controls['nom'].touched">Ce champ est obligatoire</small>
+             </div>
+             <div class="p-field">
+                 <label for="prixAchat"><strong>prix Achat :</strong></label>
+                 <p-inputNumber id="prixAchat" formControlName="prixAchat" mode="currency" currency="MAD" locale="en-US"></p-inputNumber>
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['prixAchat'].valid && ArticleForm.controls['prixAchat'].touched">Ce champ est obligatoire</small>
+
+             </div>
+             <div class="p-field">
+                 <label for="prixVenteSurPlace"><strong>prix Vente Sur Place :</strong></label>
+                 <p-inputNumber  formControlName="prixVenteSurPlace" mode="currency" currency="MAD" locale="en-US"></p-inputNumber>
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['prixVenteSurPlace'].valid && ArticleForm.controls['prixVenteSurPlace'].touched">Ce champ est obligatoire</small>
+
+             </div>
+             <div class="p-field">
+                 <label for="prixVenteParCommande">prixVenteParCommande</label>
+                 <p-inputNumber  formControlName="prixVenteParCommande" mode="currency" currency="MAD" locale="en-US"></p-inputNumber>
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['prixVenteParCommande'].valid && ArticleForm.controls['prixVenteParCommande'].touched">Ce champ est obligatoire</small>
+             </div>
+             <div class="p-field">
+                 <label for="prixVenteCasa">prixVenteCasa</label>
+                 <p-inputNumber  formControlName="prixVenteCasa" mode="currency" currency="MAD" locale="en-US"></p-inputNumber>
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['prixVenteCasa'].valid && ArticleForm.controls['prixVenteCasa'].touched">Ce champ est obligatoire</small>
+             </div>
+             <div class="p-field">
+                 <label for="prixVenteComptoire">prixVenteComptoire</label>
+                 <p-inputNumber  formControlName="prixVenteComptoire" mode="currency" currency="MAD" locale="en-US"></p-inputNumber>
+                 <small class="p-invalid" style="color:red;" *ngIf="!ArticleForm.controls['prixVenteComptoire'].valid && ArticleForm.controls['prixVenteComptoire'].touched">Ce champ est obligatoire</small>
+             </div>
+         </ng-template>
+          <p-footer>
+             <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+             <button pButton pRipple label="Save" [disabled]="!ArticleForm.valid" icon="pi pi-check" class="p-button-text" (click)="saveArticle()"></button>
+         </p-footer>
+
+     </p-dialog>
+</form>

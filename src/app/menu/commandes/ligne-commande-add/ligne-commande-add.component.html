@@ -1,0 +1,54 @@
+<div class="p-5">
+  <p-card>
+    <h1><strong>Ajouter une ligne de commande</strong></h1>
+
+    <!-- <p-table [value]="articles" selectionMode="single" [(selection)]="selectedArticle" dataKey="articleReference" responsiveLayout="scroll"> -->
+      <form name="form" [formGroup]="ligneCommandeForm">
+        <div class="p-field mb-2 mt-2">
+            <label for="qnt">Quantity : </label><br>
+            <input type="text" pInputText id="qnt" formControlName="qnt" autofocus />
+            <small class="p-invalid" style="color:red;" *ngIf="!ligneCommandeForm.controls['qnt'].valid && ligneCommandeForm.controls['qnt'].touched">Ce champ est obligatoire</small>
+        </div>
+        <div class="p-field mb-4">
+          <label for="prixVentReel">Prix Vente Reel:</label><br>
+          <input type="text" pInputText id="prixVentReel" formControlName="prixVentReel" autofocus />
+          <small class="p-invalid" style="color:red;" *ngIf="!ligneCommandeForm.controls['prixVentReel'].valid && ligneCommandeForm.controls['prixVentReel'].touched">Ce champ est obligatoire</small>
+      </div>
+    </form>
+      <p-table  #dt [value]="articles" [rows]="8" selectionMode="single" dataKey="reference" [paginator]="true" [globalFilterFields]="['articleReference','nom']"
+        [(selection)]="selectedArticle" [rowHover]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h1 class="p-m-0">Articles</h1>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+
+      <ng-template pTemplate="header">
+          <tr>
+            <th>Référence d'article</th>
+            <th>Nom d'article</th>
+            <th>Prix d'achat</th>
+            <th>Prix de vente sur place</th>
+            <th>Prix de vente par commande</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-article>
+          <tr [pSelectableRow]="article">
+            <td>{{article?.reference}}</td>
+            <td>{{article?.nom}}</td>
+            <td>{{article?.prixChat}}</td>
+            <td>{{article?.prixVenteSurPlace}}</td>
+            <td>{{article?.prixVenteParCommande}}</td>
+          </tr>
+      </ng-template>
+  </p-table>
+
+  <button pButton type="button" class="mt-2" [disabled]="!ligneCommandeForm.valid || !selectedArticle"  label="Ajouter" (click)="ajouterLigneCommande()"></button>
+  </p-card>
+</div>
+
