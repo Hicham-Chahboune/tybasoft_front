@@ -18,7 +18,6 @@ export class DetailCommandeComponent implements OnInit {
 
   showDialog = false;
 
-  @ViewChild('tva') tva : ElementRef;
 
   constructor( private commandeService:CommandeService,
                private router:Router,
@@ -47,23 +46,21 @@ export class DetailCommandeComponent implements OnInit {
   }
 
   onFacturerClick(){
-    this.showDialog = true
+    this.saveFacture()
   }
 
   hideDialog(){
     this.showDialog = false
   }
   saveFacture(){
-    let tva = this.tva.nativeElement.value;
     let facture : Facture = {
       commande:this.commande,
-      tva
+      tva:20
     }
-    this.factureService.create(facture).subscribe(e=>{
+    this.factureService.create(facture).subscribe(facture=>{
       this.commande.nbFactures++
+      this.router.navigateByUrl(`/app/factures/${facture.id}`)
     })
     this.showDialog=false
   }
-
-
 }

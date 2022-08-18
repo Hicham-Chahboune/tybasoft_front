@@ -34,8 +34,8 @@
                 </th>
                 <th pSortableColumn="reference">Reference <p-sortIcon field="articleReference"></p-sortIcon></th>
                 <th pSortableColumn="date">Date <p-sortIcon field="nom"></p-sortIcon></th>
-                <th pSortableColumn="client.prenom">Client <p-sortIcon field="prixChat"></p-sortIcon></th>
-                <th pSortableColumn="status">Status <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="client.nomComplet">Client <p-sortIcon field="prixChat"></p-sortIcon></th>
+                <th pSortableColumn="tauxMarge">taux Marge <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
                 <th pSortableColumn="total">Total <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
                 <th></th>
                 <th></th>
@@ -48,8 +48,8 @@
                 </td>
                 <td>{{commande.reference}}</td>
                 <td>{{commande.date | date}}</td>
-                <td>{{commande.client.prenom}} {{commande.client.nom}}</td>
-                <td>{{commande.status}}</td>
+                <td>{{commande.client.nomComplet}}</td>
+                <td>{{commande.tauxMarge | number}} %</td>
                 <td>{{commande.total}} DH</td>
                 <td>
                   <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="commande.id"></a>

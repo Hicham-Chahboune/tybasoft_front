@@ -39,6 +39,8 @@ export class CommandesComponent implements OnInit {
   ngOnInit() {
     this.commandeService.getAll().subscribe((data) => {
       this.commandes = data;
+    },err=>{
+      this.messageService.add({severity:'error', summary: 'Error', detail: "Une erreur s'est produite veuillez réessayer plus tard"});
     });
   }
   getEventValue($event: any): string {
@@ -102,7 +104,6 @@ export class CommandesComponent implements OnInit {
         commandes.push(command);
       }
       if (item['Lignes de la commande/Article/ID']){
-
         article.reference=item['Lignes de la commande/Article/ID']
         commandes[commandes.length -1].ligneCommandes?.push({
           article,
@@ -113,8 +114,12 @@ export class CommandesComponent implements OnInit {
       }
     }
     this.commandeService.importCommandes(commandes).subscribe(e=>{
-      console.log(e)
-    },e=>console.log(e))
+      this.commandes.push(...e);
+      this.messageService.add({severity:'success', summary: 'Success', detail: "Imported successfully"});
+    },err=>{
+      console.log(err)
+      this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message});
+    })
   }
 
 }

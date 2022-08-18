@@ -13,7 +13,7 @@
         <h6><strong>Client</strong></h6>
         <p-divider layout="vertical" class="h-full"></p-divider>
         <div>
-          <p>{{facture.commande?.client?.prenom}} {{facture.commande?.client?.nom}}</p>
+          <p>{{facture.commande?.client?.nomComplet}}</p>
           <p>{{facture.commande?.client?.tel}}</p>
           <p>{{facture.commande?.client?.ville.label}}</p>
         </div>
@@ -58,10 +58,15 @@
 
           </ng-template>
       </p-table>
-
+      <p><strong>HT :</strong>{{facture.commande.total}} DH</p>
+      <p><strong>TVA:</strong>20%</p>
+      <p><strong>TTC:</strong>{{facture.commande.total * 1.2}} DH</p>
       </p-tabPanel>
       <p-tabPanel header="Autres informations">
-          Content 2
+        <p><strong>Vendeur Nom complet : </strong>{{facture.commande?.vendeur.nomComplet}}</p>
+        <p><strong>Vendeur telephone : </strong>{{facture.commande?.vendeur.telProfess}}</p>
+        <p-divider></p-divider>
+        <p><strong>Benéfice de la commande : </strong> {{facture.commande?.benefice | number }} DH</p>
       </p-tabPanel>
 
   </p-tabView>

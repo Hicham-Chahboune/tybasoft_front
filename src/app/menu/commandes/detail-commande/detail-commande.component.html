@@ -8,13 +8,13 @@
       <p-divider></p-divider>
     </ng-template>
 
-    <h1><strong>S00007</strong></h1>
+    <h1><strong>{{commande.reference}}</strong></h1>
     <div class="flex">
       <div class="flex justify-content-start align-items-start">
         <h6><strong>Client</strong></h6>
         <p-divider layout="vertical" class="h-full"></p-divider>
         <div>
-          <p>{{commande?.client?.prenom}} {{commande?.client?.nom}}</p>
+          <p>{{commande?.client?.nomComplet}}</p>
           <p>{{commande?.client?.tel}}</p>
           <p>{{commande?.client?.ville.label}}</p>
         </div>
@@ -61,11 +61,13 @@
       <button pButton class="p-button-sm p-button-raised p-button-rounded" (click)="modifierLignesDeCommande()" style="float: right">
         Ajouter
     </button>
-
-
       </p-tabPanel>
       <p-tabPanel header="Autres informations">
-          Content 2
+          <p><strong>Vendeur Nom complet : </strong>{{commande?.vendeur.nomComplet}}</p>
+          <p><strong>Vendeur telephone : </strong>{{commande?.vendeur.telProfess}}</p>
+          <p-divider></p-divider>
+          <p><strong>Benéfice de la commande : </strong>{{commande?.benefice | number }} DH</p>
+
       </p-tabPanel>
 
   </p-tabView>
@@ -76,17 +78,3 @@
 
 
 
-<p-dialog [responsive]="true" [(visible)]="showDialog" [style]="{width: '450px'}" header="Ajouter La facture" [modal]="true" styleClass="p-fluid">
-         <ng-template pTemplate="content">
-             <div class="p-field">
-                 <label for="articleReference"><strong>TVA</strong></label>
-                 <input type="number" pInputText id="reference" autofocus value="0" #tva min="0" max="100"/>
-             </div>
-
-         </ng-template>
-          <p-footer>
-             <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-             <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveFacture()"></button>
-         </p-footer>
-
-</p-dialog>

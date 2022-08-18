@@ -20,6 +20,8 @@ export class Command {
               public commandeType?:string,
               public nbAlerts?:number,
               public nbFactures?:number,
+              public benefice?:number,
+              public tauxMarge?:number
             ) {
             }
 }

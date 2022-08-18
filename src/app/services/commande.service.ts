@@ -19,8 +19,8 @@ export class CommandeService extends DataService<Command,number>{
      return this.http.get(API_URLS.COMMANDES_URL + '/types');
    }
 
-  importCommandes(commandes: Command[]):Observable<any>{
-    return this.http.post(API_URLS.COMMANDES_URL + '/import', commandes)
+  importCommandes(commandes: Command[]):Observable<Command[]>{
+    return this.http.post<Command[]>(API_URLS.COMMANDES_URL + '/import', commandes)
   }
 
   getStatus(status:string):CommandeStatus{
