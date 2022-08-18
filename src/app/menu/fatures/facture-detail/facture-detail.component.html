@@ -43,17 +43,15 @@
               </tr>
           </ng-template>
           <ng-template pTemplate="body" let-ligneCommande>
-              <tr [ngStyle]="{'background': ligneCommande.alert == -1 ? 'rgb(255 0 0 / 83%)' : (ligneCommande.alert==1 ? '#e9e914ba' : null),
-                             'color': ligneCommande.alert == -1 ? 'white' : '' }"
-
-              >
+            <tr [ngStyle]="{'background': ligneCommande.alert == -1 ? 'rgb(255 0 0 / 83%)' : (ligneCommande.alert==1 ? 'rgb(92 233 20 / 73%)' : null),
+            'color': ligneCommande.alert == -1 ? 'white' : '' }">
                   <td>{{ligneCommande.article.reference}}</td>
                   <td>{{ligneCommande.article.nom}}</td>
                   <td>{{ligneCommande.article.prixAchat}}</td>
                   <td>{{ligneCommande.article.prixVenteParCommande}}</td>
                   <td>{{ligneCommande.qnt}}</td>
                   <td>{{ligneCommande.prixVentReel}}</td>
-                  <td>{{ligneCommande.sousTotal}}</td>
+                  <td>{{ligneCommande.sousTotal | number }}</td> <!--I should let just 2 number after comma-->
               </tr>
 
           </ng-template>

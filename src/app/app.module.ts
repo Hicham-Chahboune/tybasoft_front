@@ -28,6 +28,7 @@ import { FacturesComponent } from './menu/fatures/factures/factures.component';
 import { FactureDetailComponent } from './menu/fatures/facture-detail/facture-detail.component';
 import { ClientsComponent } from './menu/clients/clients.component';
 import { VendeursComponent } from './menu/vendeurs/vendeurs/vendeurs.component';
+import { SharedCommandDetailComponent } from './menu/commandes/shared-command-detail/shared-command-detail.component';
 
 
 
@@ -39,7 +40,7 @@ import { VendeursComponent } from './menu/vendeurs/vendeurs/vendeurs.component';
     LigneCommandeAddComponent,
     AddCommandeComponent,
     FacturesComponent,
-    FactureDetailComponent,ClientsComponent, VendeursComponent
+    FactureDetailComponent,ClientsComponent, VendeursComponent, SharedCommandDetailComponent
   ],
   imports: [
     BrowserModule,

@@ -58,9 +58,8 @@
               </tr>
           </ng-template>
       </p-table>
-      <button pButton class="p-button-sm p-button-raised p-button-rounded" (click)="modifierLignesDeCommande()" style="float: right">
-        Ajouter
-    </button>
+
+
       </p-tabPanel>
       <p-tabPanel header="Autres informations">
           <p><strong>Vendeur Nom complet : </strong>{{commande?.vendeur.nomComplet}}</p>
@@ -69,8 +68,10 @@
           <p><strong>Benéfice de la commande : </strong>{{commande?.benefice | number }} DH</p>
 
       </p-tabPanel>
-
   </p-tabView>
+  <button pButton class="p-button-sm p-button-raised p-button-rounded" (click)="modifierLignesDeCommande()" style="float: right">
+    Ajouter
+  </button>
   </p-card>
 </div>
 

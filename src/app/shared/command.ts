@@ -22,6 +22,5 @@ export class Command {
               public nbFactures?:number,
               public benefice?:number,
               public tauxMarge?:number
-            ) {
-            }
+            ) {}
 }
