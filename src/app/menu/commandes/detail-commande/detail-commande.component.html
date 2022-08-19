@@ -3,12 +3,12 @@
     <ng-template pTemplate="header">
       <div class="flex p-1 justify-content-between">
         <button pButton type="button" label="Facturer" class="p-button-outlined" (click)="onFacturerClick()"></button>
-        <button pButton type="button" [label]="'Factures('+commande.nbFactures+')'" class="p-button-outlined"></button>
+        <button pButton type="button" [label]="'Factures('+commande?.nbFactures+')'" class="p-button-outlined"></button>
       </div>
       <p-divider></p-divider>
     </ng-template>
 
-    <h1><strong>{{commande.reference}}</strong></h1>
+    <h1><strong>{{commande?.reference}}</strong></h1>
     <div class="flex">
       <div class="flex justify-content-start align-items-start">
         <h6><strong>Client</strong></h6>

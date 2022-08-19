@@ -45,6 +45,9 @@ export class FactureDetailComponent implements OnInit {
 
   imprimer(){
     this.factureService.imprimer(this.facture.id).subscribe(e=>{
+      const blob = new Blob([e],{'type':'application/pdf'})
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
       console.log("Fine!!")
     });
   }

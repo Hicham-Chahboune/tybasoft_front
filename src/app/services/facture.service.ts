@@ -16,7 +16,8 @@ export class FactureService extends DataService<Facture,number>{
   }
 
   imprimer(id:number){
-    return this.http.get(API_URLS.FACTURES_URL+'/imprimer/'+id);
+    return this.http.get(API_URLS.FACTURES_URL+'/imprimer/'+id,{ responseType: 'blob'});
+
   }
 
 }
