@@ -61,8 +61,8 @@
       <p><strong>TTC:</strong>{{facture.commande.total * 1.2}} DH</p>
       </p-tabPanel>
       <p-tabPanel header="Autres informations">
-        <p><strong>Vendeur Nom complet : </strong>{{facture.commande?.vendeur.nomComplet}}</p>
-        <p><strong>Vendeur telephone : </strong>{{facture.commande?.vendeur.telProfess}}</p>
+        <p><strong>Vendeur Nom complet : </strong>{{facture.commande?.vendeur?.nomComplet}}</p>
+        <p><strong>Vendeur telephone : </strong>{{facture.commande?.vendeur?.telProfess}}</p>
         <p-divider></p-divider>
         <p><strong>Benéfice de la commande : </strong> {{facture.commande?.benefice | number }} DH</p>
       </p-tabPanel>

@@ -81,6 +81,7 @@ export class CommandesComponent implements OnInit {
   }
 
   onExcelFileRead(table: CommandeHeaders[]) {
+    console.log(table);
 
     let commandes: Command[] = [];
     let article = new Article();
