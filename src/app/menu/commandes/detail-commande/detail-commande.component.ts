@@ -34,7 +34,7 @@ export class DetailCommandeComponent implements OnInit {
 
   loadCurrentCommande() {
     let id = this.route.snapshot.params["id"];
-    this.commandeService.getById(id).subscribe(
+    this.commandeService.getByReference(id).subscribe(
       res => {
         this.commande = res;
       }
@@ -48,19 +48,27 @@ export class DetailCommandeComponent implements OnInit {
   onFacturerClick(){
     this.saveFacture()
   }
-
+  onFacturesClick(){
+    this.factureService.getFactureByCommandId(this.commande.id).subscribe(facture=>{
+      this.router.navigate(['/app/factures',facture.id]);
+    })
+  }
   hideDialog(){
     this.showDialog = false
   }
   saveFacture(){
-    let facture : Facture = {
-      commande:this.commande,
-      tva:20
+    if(!this.commande.client.ice){
+      this.router.navigateByUrl("/app/clients/"+this.commande.client.externalId+"?return="+this.router.url)
+    }else{
+      let facture : Facture = {
+        commande:this.commande,
+        tva:20
+      }
+      this.factureService.create(facture).subscribe(facture=>{
+        this.commande.nbFactures++
+        this.router.navigateByUrl(`/app/factures/${facture.id}`)
+      })
     }
-    this.factureService.create(facture).subscribe(facture=>{
-      this.commande.nbFactures++
-      this.router.navigateByUrl(`/app/factures/${facture.id}`)
-    })
     this.showDialog=false
   }
 }

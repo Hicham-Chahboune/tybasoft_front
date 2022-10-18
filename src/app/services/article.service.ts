@@ -8,7 +8,7 @@ import { DataService } from './data.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ArticleService extends DataService<Article,string>{
+export class ArticleService extends DataService<Article,number>{
 
   constructor(http:HttpClient) {
     super(API_URLS.ARTICLES_URL,http)

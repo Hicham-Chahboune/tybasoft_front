@@ -81,105 +81,51 @@ export class CommandesComponent implements OnInit {
   }
 
   onExcelFileRead(table: CommandeHeaders[]) {
-    console.log(table);
 
     let commandes: Command[] = [];
     let article = new Article();
 
     for (let item of table) {
-      console.log(item['Lignes de la commande/Prix unitaire'])
       if (item['Référence commande']) {
         let command:Command ={
           reference:item['Référence commande'],
           vendeur:{
-            externalRef:item['Vendeur/ID']
+            mailProfess:item['Vendeur/Identifiant']
           },
-          status:this.commandeService.getStatus(status),
           date:item['Date de la commande'],
           client:{
-            externalRef:item['Client/ID']
+            externalId: parseInt(item['Client/ID'])
           },
           ligneCommandes:[]
         }
         commandes.push(command);
-      }
-      if(item['Lignes de la commande/Article/ID']){
-        if(commandes.length==0){
-          this.messageService.add({severity:'Error', summary: 'error', detail: "No command for this command line"});
+        }
+        if(item['Lignes de la commande/Article/ID']){
+          if(commandes.length==0){
+            this.messageService.add({severity:'Error', summary: 'error', detail: "No command for this command line"});
+            return;
+          }
+          article.externalId=parseInt(item['Lignes de la commande/Article/ID'])
+          commandes[commandes.length -1].ligneCommandes?.push({
+            article,
+            qnt: item['Lignes de la commande/Quantité'],
+            sousTotal: item['Lignes de la commande/Total'],
+            prixVentReel: item['Lignes de la commande/Prix unitaire'],
+          });
+        }else{
+          this.messageService.add({severity:'error', summary: 'Error', detail: "Some error occured in the schema of your excel file, please export to visualize the correct schema"});
           return;
         }
-        article.reference=item['Lignes de la commande/Article/ID']
-        commandes[commandes.length -1].ligneCommandes?.push({
-          article,
-          qnt: item['Lignes de la commande/Quantité'],
-          sousTotal: item['Lignes de la commande/Total'],
-          prixVentReel: item['Lignes de la commande/Prix unitaire'],
-        });
-      }else{
-        this.messageService.add({severity:'error', summary: 'Error', detail: "Some error occured in the schema of your excel file, please export to visualize the correct schema"});
-        return;
       }
-    }
     this.commandeService.importCommandes(commandes).subscribe(e=>{
       this.commandes.push(...e);
       this.messageService.add({severity:'success', summary: 'Success', detail: "Imported successfully"});
     },err=>{
-      console.log(err)
       this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message});
     })
   }
 
-  exportExcel() {
-    import("xlsx").then(xlsx => {
-
-        let expotedCommand:any= []
-        if(this.commandes.length==0)
-          expotedCommand.push({
-            "Référence commande": "",
-            "Date de la commande": '',
-            "Client/ID": '',
-            "Vendeur/ID": '',
-            "Lignes de la commande/Article/ID": '',
-            "Lignes de la commande/Quantité": '',
-            "Lignes de la commande/Total": '',
-            "Lignes de la commande/Prix unitaire":''
-          })
-        else
-        this.commandes.forEach(command => {
-          expotedCommand.push({
-            "Référence commande": command.reference,
-            "Date de la commande": command.date,
-            "Client/ID": command.client?.externalRef,
-            "Vendeur/ID": command.vendeur?.externalRef,
-            "Lignes de la commande/Article/ID": command.ligneCommandes!![0].article?.id,
-            "Lignes de la commande/Quantité": command.ligneCommandes!![0].qnt,
-            "Lignes de la commande/Total": command.ligneCommandes!![0].sousTotal,
-            "Lignes de la commande/Prix unitaire":command.ligneCommandes!![0].prixVentReel
-          })
-          for (let i = 1; i < command.ligneCommandes!!.length; i++) {
-            expotedCommand.push({
-              "Lignes de la commande/Article/ID": command.ligneCommandes!![i].article?.id,
-              "Lignes de la commande/Quantité": command.ligneCommandes!![i].qnt,
-              "Lignes de la commande/Total": command.ligneCommandes!![i].sousTotal,
-              "Lignes de la commande/Prix unitaire":command.ligneCommandes!![i].prixVentReel
-
-            })
-          }
-        });
-        const worksheet = xlsx.utils.json_to_sheet(expotedCommand);
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, "articles");
-    });
-}
-saveAsExcelFile(buffer: any, fileName: string): void {
-  let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  let EXCEL_EXTENSION = '.xlsx';
-  const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-  });
-  saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-}
+  exportExcel() {}
 
 }
 
@@ -187,24 +133,11 @@ interface CommandeHeaders {
   "Référence commande": string;
   "Date de la commande": Date;
   "Client/ID": string;
-  "Vendeur/ID": string;
+  "Vendeur/Identifiant": string;
   "Lignes de la commande/Article/ID": string;
   "Lignes de la commande/Quantité": number;
   "Lignes de la commande/Total": number;
   "Lignes de la commande/Prix unitaire":number
 }
 
-
-// interface excelType {
-//   articleReference: string;
-//   commandeReference: string;
-//   date: Date;
-//   prisPar: string;
-//   prixVentReel: number;
-//   qnt: number;
-//   sousTotal: number;
-//   status: string;
-//   total: number;
-//   externalRef: string;
-// }
 

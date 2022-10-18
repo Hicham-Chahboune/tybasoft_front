@@ -1,3 +1,4 @@
+import { DetailClientComponent } from './menu/clients/detail-client/detail-client.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationGuard } from './guard/authentication.guard';
@@ -72,10 +73,12 @@ const routes: Routes = [
 
       { path: 'commandes', component: CommandesComponent},
       { path: 'commandes/add', component: AddCommandeComponent},
-      { path: 'commandes/:id', component: DetailCommandeComponent},
+      { path: 'commandes/ref/:id', component: DetailCommandeComponent},
       { path: 'commandes/:id/lignes-des-commandes', component: LigneCommandeAddComponent},
 
       { path: 'clients', component: ClientsComponent},
+      { path: 'clients/:id', component: DetailClientComponent},
+
       { path: 'vendeurs', component: VendeursComponent},
 
       { path: 'factures', component: FacturesComponent},

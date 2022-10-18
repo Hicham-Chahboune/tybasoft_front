@@ -16,7 +16,7 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table  #dt [value]="commandes" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','status']" styleClass="p-datatable-sm"
+    <p-table  #dt [value]="commandes" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','client.nomComplet','vendeur.nomComplet']" styleClass="p-datatable-sm"
         [(selection)]="selectedCommandes" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
@@ -35,10 +35,10 @@
                 <th pSortableColumn="reference">Reference <p-sortIcon field="articleReference"></p-sortIcon></th>
                 <th pSortableColumn="date">Date <p-sortIcon field="nom"></p-sortIcon></th>
                 <th pSortableColumn="client.nomComplet">Client <p-sortIcon field="prixChat"></p-sortIcon></th>
-                <th pSortableColumn="tauxMarge">taux Marge <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="vendeur.nomComplet">Vendeur <p-sortIcon field="prixChat"></p-sortIcon></th>
                 <th pSortableColumn="total">Total <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
                 <th></th>
-                <th></th>
+                <!-- <th></th> -->
               </tr>
         </ng-template>
         <ng-template pTemplate="body" let-commande>
@@ -49,15 +49,15 @@
                 <td>{{commande.reference}}</td>
                 <td>{{commande.date | date}}</td>
                 <td>{{commande.client.nomComplet}}</td>
-                <td>{{commande.tauxMarge | number}} %</td>
-                <td>{{commande.total}} DH</td>
+                <td>{{commande.vendeur.nomComplet}} DH</td>
+                <td>{{commande.total }} DH</td>
                 <td>
-                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="commande.id"></a>
+                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="['ref',commande.reference]"></a>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCommand(commande.id)"></button>
                 </td>
-                <td>
+                <!-- <td>
                   <p-badge [value]='commande?.nbAlerts'  [severity]="commande?.nbAlerts==0?'success':'danger'"></p-badge>
-                </td>
+                </td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">

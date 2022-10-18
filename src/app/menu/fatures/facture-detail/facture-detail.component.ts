@@ -21,7 +21,6 @@ export class FactureDetailComponent implements OnInit {
                private router:Router,
                private route: ActivatedRoute,
              ) {
-
    }
 
   ngOnInit(): void {
@@ -31,25 +30,24 @@ export class FactureDetailComponent implements OnInit {
 
   loadCurrentCommande() {
     let id = this.route.paramMap.subscribe(params=>{
-      console.log(params.get("id"))
       let id:number = +params.get("id")!! | 0
+
       this.factureService.getById(id).subscribe(
         res => {
           this.facture = res;
-          console.log(res)
         }
       )
-
     });
   }
 
   imprimer(){
-    this.factureService.imprimer(this.facture.id).subscribe(e=>{
-      const blob = new Blob([e],{'type':'application/pdf'})
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
-      console.log("Fine!!")
-    });
+      this.factureService.imprimer(this.facture.id).subscribe(result=>{
+        let blob:Blob = result.body as Blob
+        let a = document.createElement("a");
+        a.download = "facture_"+this.facture.commande.reference+".pdf"
+        a.href = window.URL.createObjectURL(blob);
+        a.click()
+      });
   }
 
 //   modifierLignesDeCommande(){

@@ -71,26 +71,26 @@ export class ArticlesComponent implements OnInit {
   }
 
   deleteSelectedArticles() {
-   const ids = this.selectedArticles.map(e=>e.reference);
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected products?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-            if(ids){
-                this.articleService.deleteAll(ids as string[]).subscribe(e=>{
-                  this.articles = this.articles.filter(val => !this.selectedArticles.includes(val));
-                  this.selectedArticles = [];
-                  this.messageService.add({severity:'success', summary: 'Successful', detail: "Les articles ont été bien supprimé", life: 3000});
-                },
-                error => {
-                  console.log(error)
-                  this.messageService.add({severity:'error', summary: 'Error', detail: "une erreur s'est produite veuillez réessayer plus tard", life: 2000});
-                })
+  //  const ids = this.selectedArticles.map(e=>e.reference);
+  //     this.confirmationService.confirm({
+  //         message: 'Are you sure you want to delete the selected products?',
+  //         header: 'Confirm',
+  //         icon: 'pi pi-exclamation-triangle',
+  //         accept: () => {
+  //           if(ids){
+  //               this.articleService.deleteAll(ids as string[]).subscribe(e=>{
+  //                 this.articles = this.articles.filter(val => !this.selectedArticles.includes(val));
+  //                 this.selectedArticles = [];
+  //                 this.messageService.add({severity:'success', summary: 'Successful', detail: "Les articles ont été bien supprimé", life: 3000});
+  //               },
+  //               error => {
+  //                 console.log(error)
+  //                 this.messageService.add({severity:'error', summary: 'Error', detail: "une erreur s'est produite veuillez réessayer plus tard", life: 2000});
+  //               })
 
-            }
-          }
-      });
+  //           }
+  //         }
+  //     });
   }
 
   editArticle(article: Article) {
@@ -106,8 +106,8 @@ export class ArticlesComponent implements OnInit {
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
 
-            this.articleService.delete(article.reference!!).subscribe(res=>{
-              this.articles = this.articles.filter(val => val.reference !== article.reference);
+            this.articleService.delete(article.externalId!!).subscribe(res=>{
+              this.articles = this.articles.filter(val => val.externalId !== article.externalId);
               this.messageService.add({severity:'success', summary: 'Successful', detail: "L'article a été bien supprimé", life: 3000});
             },
             error => {
@@ -135,7 +135,14 @@ export class ArticlesComponent implements OnInit {
   }
   exportExcel() {
     import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.articles);
+        const worksheet = xlsx.utils.json_to_sheet(this.articles.map(e=>{
+          return {
+            "Référence interne":e.reference,
+            "Nom":e.nom,
+            "Prix de vente":e.prixVente,
+            "Article/ID":e.externalId
+          }
+        }));
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, "articles");
@@ -188,14 +195,10 @@ onExcelFileRead(table: ArticleHeaders[]){
   let importedArticles :Article[] = []
   for (let article of table) {
     let a : Article = {
-      reference:article.Référence,
-      nom:article.Nom,
-      description:article.Description,
-      prixAchat:article.PrixAchat,
-      prixVenteSurPlace:article.PrixSurPlace,
-      prixVenteCasa:article.PrixCasa,
-      prixVenteComptoire:article.PrixComptoire,
-      prixVenteParCommande:article.PrixCommande
+      externalId:article['Article/ID'],
+      reference:article['Référence interne'],
+      prixVente:article['Prix de vente'],
+      nom:article.Nom
     }
     importedArticles.push(a);
 }
@@ -204,7 +207,6 @@ this.articleService.importArticles(importedArticles).subscribe(e=>{
   this.articles.push(...importedArticles)
   importedArticles=[]
 },err=>{
-  console.log(err)
   this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message});
 }
 )}
@@ -212,8 +214,12 @@ this.articleService.importArticles(importedArticles).subscribe(e=>{
 }
 
 interface ArticleHeaders {
-  "Référence": string;
+  //
+  "Référence interne": string;
+  "Article/ID":number;
+  "Prix de vente":number;
   "Nom": string;
+  //
   "Description": string;
   "PrixAchat": number;
   "PrixSurPlace": number;
@@ -221,104 +227,6 @@ interface ArticleHeaders {
   "PrixCasa": number;
   "PrixComptoire": number;
 }
-
-
-
-
-  // articles: any[] = [];
-  // articlesBackup: any[] = [];
-  // fileToUpload: File | null = null;
-  // search_warning = '';
-
-  // loading = true
-
-
-  // constructor(private articleService: ArticleService, private notificationService: NotificationService, private dialog: MatDialog) { }
-
-  // ngOnInit() {
-  //   this.loadData()
-  // }
-
-  // loadData() {
-  //     this.articleService.getAllArticles().subscribe(
-  //       (data) => {
-  //         this.articles = []
-  //         this.articles = data
-  //         this.loading=false
-  //       }
-  //     )
-
-  // }
-
-  // onFileSelected(event: any) {
-  //   this.fileToUpload = event.target.files[0];
-  //   if (this.fileToUpload) {
-  //     this.articleService.uploadFile(this.fileToUpload).subscribe(
-  //       (data: any) => {
-  //         this.notificationService.notify(NotificationType.SUCCESS, 'Les articles ont été bien ajouter');
-  //         this.loadData();
-  //         this.fileToUpload = null;
-  //       },
-  //       (error: any) => {
-  //         this.notificationService.notify(NotificationType.ERROR, error.message);
-  //       }
-  //     )
-  //   }
-  // }
-
-
-  // deleteArticle(id: Number) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.panelClass = "popup-suppression-style";
-  //   dialogConfig.data = {
-  //     title: 'Suppression',
-  //     content: ''
-  //   };
-  //   const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       this.articleService.deleteArticle(id).subscribe(
-  //         (data: any) => {
-  //           this.notificationService.notify(NotificationType.WARNING, "L'article a été bien supprimé");
-  //           this.loadData();
-  //         },
-  //         (error: any) => {
-  //           this.notificationService.notify(NotificationType.ERROR, error.message);
-  //         }
-  //       );
-  //     } else {
-  //     }
-  //   });
-  // }
-
-  // filterArticles(key: any, type: string) {
-  //   let result: any[] = [];
-  //   switch (type) {
-  //     case "ref":
-  //       result = this.articlesBackup.filter(article => article.articleReference?.toLowerCase().includes(key.toLowerCase()));
-  //       break;
-  //     case "nom":
-  //       result = this.articlesBackup.filter(article => article.nom?.toLowerCase().includes(key.toLowerCase()));
-  //       break;
-  //     case "prixChat":
-  //       result = this.articlesBackup.filter(article => article.prixChat.toString().toLowerCase().includes(key));
-  //       break
-  //     case "prixVenteSurPlace":
-  //       result = this.articlesBackup.filter(article => article.prixVenteSurPlace.toString().toLowerCase().includes(key));
-  //       break
-  //     case "prixVenteParCommande":
-  //       result = this.articlesBackup.filter(article => article.prixVenteParCommande.toString().toLowerCase().includes(key));
-  //       break;
-
-  //   }
-
-  //   this.articles = result;
-  //   result.length === 0 ? this.search_warning = "Aucun article trouvé" : this.search_warning = '';
-  // }
-
-
-
 
 
 

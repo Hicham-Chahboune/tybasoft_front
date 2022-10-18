@@ -18,6 +18,9 @@ export class CommandeService extends DataService<Command,number>{
    getcommandeTypes():Observable<any> {
      return this.http.get(API_URLS.COMMANDES_URL + '/types');
    }
+   getByReference(ref:string):Observable<Command> {
+     return this.http.get(API_URLS.COMMANDES_URL + '/ref/'+ref);
+   }
 
   importCommandes(commandes: Command[]):Observable<Command[]>{
     return this.http.post<Command[]>(API_URLS.COMMANDES_URL + '/import', commandes)
@@ -27,11 +30,9 @@ export class CommandeService extends DataService<Command,number>{
     let commandStatus;
     switch (status) {
       case "EN_ATTENT_DE_PAIEMENT":
-        console.log("EN_ATTENT_DE_PAIEMENT")
         commandStatus = CommandeStatus.EN_ATTENT_DE_PAIEMENT
         break;
       case "EN_ATTENT_DE_TRANSPORT":
-          console.log("EN_ATTENT_DE_TRANSPORT")
           commandStatus = CommandeStatus.EN_ATTENT_DE_TRANSPORT
           break;
       default:

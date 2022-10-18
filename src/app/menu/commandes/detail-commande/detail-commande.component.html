@@ -1,9 +1,13 @@
 <div>
-  <p-card >
+  <p-card *ngIf="commande">
     <ng-template pTemplate="header">
       <div class="flex p-1 justify-content-between">
-        <button pButton type="button" label="Facturer" class="p-button-outlined" (click)="onFacturerClick()"></button>
-        <button pButton type="button" [label]="'Factures('+commande?.nbFactures+')'" class="p-button-outlined"></button>
+        <div *ngIf="!commande.factured">
+          <button pButton type="button" label="Facturer" class="p-button-outlined" (click)="onFacturerClick()"></button>
+        </div>
+        <div *ngIf="commande.factured">
+          <button pButton type="button" [label]="'Facture'" (click)="onFacturesClick()" class="p-button-outlined"></button>
+        </div>
       </div>
       <p-divider></p-divider>
     </ng-template>
@@ -15,8 +19,8 @@
         <p-divider layout="vertical" class="h-full"></p-divider>
         <div>
           <p>{{commande?.client?.nomComplet}}</p>
+          <p>{{commande?.client?.adresseComplete}}</p>
           <p>{{commande?.client?.tel}}</p>
-          <p>{{commande?.client?.ville.label}}</p>
         </div>
       </div>
 
@@ -50,8 +54,8 @@
               >
                   <td>{{ligneCommande.article.reference}}</td>
                   <td>{{ligneCommande.article.nom}}</td>
-                  <td>{{ligneCommande.article.prixAchat}}</td>
-                  <td>{{ligneCommande.article.prixVenteParCommande}}</td>
+                  <td>{{ligneCommande.article.prixAchat || '----'}}</td>
+                  <td>{{ligneCommande.article.prixVenteParCommande || '----'}}</td>
                   <td>{{ligneCommande.qnt}}</td>
                   <td>{{ligneCommande.prixVentReel}}</td>
                   <td>{{ligneCommande.sousTotal}}</td>
@@ -63,13 +67,14 @@
       </p-tabPanel>
       <p-tabPanel header="Autres informations">
           <p><strong>Vendeur Nom complet : </strong>{{commande?.vendeur?.nomComplet}}</p>
+          <p><strong>Vendeur Email : </strong>{{commande?.vendeur?.mailProfess}}</p>
           <p><strong>Vendeur telephone : </strong>{{commande?.vendeur?.telProfess}}</p>
           <p-divider></p-divider>
-          <p><strong>Benéfice de la commande : </strong>{{commande?.benefice | number }} DH</p>
+          <p><strong>Benéfice de la commande : </strong>---- DH</p>
 
       </p-tabPanel>
   </p-tabView>
-  <button pButton class="p-button-sm p-button-raised p-button-rounded" (click)="modifierLignesDeCommande()" style="float: right">
+  <button pButton disabled="true" class="p-button-sm p-button-raised p-button-rounded" (click)="modifierLignesDeCommande()" style="float: right">
     Ajouter
   </button>
   </p-card>

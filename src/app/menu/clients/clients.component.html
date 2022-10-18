@@ -16,9 +16,9 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table  #dt [value]="clients" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','status']" styleClass="p-datatable-sm"
-        [(selection)]="selectedClient" [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+    <p-table  #dt [value]="clients" [rows]="10" [paginator]="true" [globalFilterFields]="['nomComplet','ice','tel','adresseComplete']" styleClass="p-datatable-sm"
+        [(selection)]="selectedClient" [rowHover]="true" dataKey="externalId" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[20,50,100,150]">
         <ng-template pTemplate="caption">
             <div class="p-d-flex p-ai-center p-jc-between">
                 <span class="p-input-icon-left">
@@ -32,11 +32,11 @@
                 <th style="width: 3rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th>External Ref</th>
-                <th pSortableColumn="nomComplet">Nom complet<p-sortIcon field="nom"></p-sortIcon></th>
-                <th pSortableColumn="tel">tel <p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
-                <th pSortableColumn="ville.label">ville <p-sortIcon field="prixVenteParCommande"></p-sortIcon></th>
-                <th pSortableColumn="nbCommands">nbCommands <p-sortIcon field="prixChat"></p-sortIcon></th>
+                <th>External Id</th>
+                <th pSortableColumn="nomComplet">Nom complet<p-sortIcon field="nomComplet"></p-sortIcon></th>
+                <th pSortableColumn="ice">ICE <p-sortIcon field="ice"></p-sortIcon></th>
+                <th pSortableColumn="tel">Tel <p-sortIcon field="tel"></p-sortIcon></th>
+                <th pSortableColumn="adresseComplete">Adresse <p-sortIcon field="adresseComplete"></p-sortIcon></th>
                 <th></th>
               </tr>
         </ng-template>
@@ -45,13 +45,13 @@
                 <td>
                     <p-tableCheckbox [value]="client"></p-tableCheckbox>
                 </td>
-                <td>{{client.externalRef}}</td>
+                <td>{{client.externalId}}</td>
                 <td>{{client.nomComplet}}</td>
+                <td>{{client.ice}}</td>
                 <td>{{client.tel}}</td>
-                <td>{{client.ville.label}}</td>
-                <td>{{client.nbCommands}}</td>
+                <td>{{client.adresseComplete}}</td>
                 <td>
-                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="client.id"></a>
+                    <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" [routerLink]="client.externalId"></a>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
                 </td>
 

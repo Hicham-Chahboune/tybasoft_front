@@ -1,0 +1,27 @@
+<div>
+  <p-card >
+    <ng-template pTemplate="header">
+      <div class="p-3">
+        <h4>Client Details</h4>
+        <button pButton type="button" label="Editer ICE" (click)="showEditDialog()"></button>
+      </div>
+      <p-divider></p-divider>
+    </ng-template>
+
+    <h5><strong>{{client.nomComplet}}</strong></h5>
+    <h6>{{client.adresseComplete}}</h6>
+    <h6>{{client.tel}}</h6>
+    <p-divider></p-divider>
+    <h6><strong>ICE: </strong>{{client.ice ? client.ice:"----"}}</h6>
+  </p-card>
+</div>
+<p-dialog header="Update ICE" [(visible)]="display" [modal]="true">
+  <input type="text" pInputText placeholder="ICE" [(ngModel)]="client.ice"><br>
+  <button pButton type="button" label="Submit"  class="p-button-sm mt-2" (click)="updateICE()"></button>
+</p-dialog>
+<p-toast></p-toast>
+
+
+
+
+

@@ -2,6 +2,8 @@ export class Article {
 
     constructor(
                 public id?:number,
+                public externalId?:number,
+                public prixVente?:number,
                 public reference?: string,
                 public description?:string,
                 public nom?: string,

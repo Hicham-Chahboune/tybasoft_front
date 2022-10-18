@@ -15,5 +15,9 @@ export class ClientService extends DataService<Client,number>{
     return this.http.post(API_URLS.CLIENTS_URL + '/import', clients);
   }
 
+  getByExternalId(id:number):Observable<Client>{
+    return this.http.get(API_URLS.CLIENTS_URL + '/byRefId/'+id);
+  }
+
 
 }

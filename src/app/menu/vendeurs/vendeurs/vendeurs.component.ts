@@ -97,20 +97,17 @@ readExcelFile (file: any){
   fileReader.readAsArrayBuffer(file);
 }
 onExcelFileRead(table: VendeurHeaders[]){
-
-
-  for (let client of table) {
+  console.log(table)
+  for (let vendeur of table) {
       let c : Vendeur = {
-        externalRef:client.ID,
-        mailProfess:client['Adresse électronique professionnelle'],
-        nomComplet:client['Nom de l\'employé'],
-        telUrgence:client['Téléphone d\'urgence'],
-        telProfess:client['Téléphone professionnel']
+        nomComplet:vendeur.Nom,
+        mailProfess:vendeur.Identifiant,
+        telProfess:vendeur['Vendeur/Téléphone']
       }
       this.importedClients.push(c);
   }
   this.vendeurService.importClient(this.importedClients).subscribe(e=>{
-    console.log(e)
+    this.vendeurs = this.importedClients
     this.importedClients=[]
   })
 }
@@ -118,10 +115,8 @@ onExcelFileRead(table: VendeurHeaders[]){
 
 }
 interface VendeurHeaders {
-  "Nom de l'employé": string;
-  'Téléphone professionnel': string;
-  'Adresse électronique professionnelle': string;
-  ID: string;
-  "Téléphone d'urgence": string;
+  "Nom": string;
+  'Identifiant': string;
+  'Vendeur/Téléphone': string;
 }
 

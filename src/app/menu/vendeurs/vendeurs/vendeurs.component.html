@@ -16,7 +16,7 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table  #dt [value]="vendeurs" [rows]="10" [paginator]="true" [globalFilterFields]="['reference','status']" styleClass="p-datatable-sm"
+    <p-table  #dt [value]="vendeurs" [rows]="10" [paginator]="true" [globalFilterFields]="['nomComplet','mailProfess']" styleClass="p-datatable-sm"
          [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
@@ -32,11 +32,9 @@
                 <th style="width: 3rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="reference">External Ref<p-sortIcon field="articleReference"></p-sortIcon></th>
-                <th pSortableColumn="date">Nom complet<p-sortIcon field="nom"></p-sortIcon></th>
-                <th pSortableColumn="status">Tel prof<p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
-                <th pSortableColumn="client.prenom">Tel urgence <p-sortIcon field="prixChat"></p-sortIcon></th>
-                <th pSortableColumn="status">Mail<p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="nomComplet">Nom complet<p-sortIcon field="nom"></p-sortIcon></th>
+                <th pSortableColumn="mailProfess">Email<p-sortIcon field="prixVenteSurPlace"></p-sortIcon></th>
+                <th pSortableColumn="telProfess">Telephone<p-sortIcon field="prixChat"></p-sortIcon></th>
                 <th></th>
               </tr>
         </ng-template>
@@ -45,13 +43,11 @@
                 <td>
                     <p-tableCheckbox [value]="vendeur"></p-tableCheckbox>
                 </td>
-                <td>{{vendeur.externalRef}}</td>
                 <td>{{vendeur.nomComplet}}</td>
-                <td>{{vendeur.telProfess}}</td>
-                <td>{{vendeur.telUrgence}}</td>
                 <td>{{vendeur.mailProfess}}</td>
+                <td>{{vendeur.telProfess? vendeur.telProfess:"----"}}</td>
                 <td>
-                  <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" ></a>
+                    <!-- <a pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-success p-mr-2" ></a> -->
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
                 </td>
 

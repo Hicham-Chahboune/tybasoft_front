@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FactureService } from 'src/app/services/facture.service';
@@ -15,13 +16,14 @@ export class FacturesComponent implements OnInit {
     private factureService: FactureService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.factureService.getAll().subscribe((data) => {
-      this.factures = data;
-      console.log(data)
-    });
+      this.factureService.getAllFactures().subscribe((data) => {
+        console.log(data)
+        this.factures = data;
+      });
   }
   getEventValue($event: any): string {
     return $event.target.value;

@@ -1,3 +1,4 @@
+import { Facture } from 'src/app/shared/facture';
 import { CommandeStatus } from "../config/commande-status";
 import { Client } from "./client";
 import { LigneCommande } from "./LigneCommande";
@@ -9,7 +10,6 @@ export class Command {
               public reference?: string,
               // public prisPar?: string,
               public status?: CommandeStatus,
-
               // public total?: number,
               public date?: Date,
               // public clientId?: number,
@@ -19,8 +19,8 @@ export class Command {
               public id?: number,
               public commandeType?:string,
               public nbAlerts?:number,
-              public nbFactures?:number,
               public benefice?:number,
-              public tauxMarge?:number
+              public tauxMarge?:number,
+              private factured?:boolean
             ) {}
 }
