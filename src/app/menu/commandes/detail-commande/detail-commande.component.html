@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div>
   <p-card *ngIf="commande">
     <ng-template pTemplate="header">
@@ -80,6 +81,10 @@
   </p-card>
 </div>
 
+<p-dialog header="Numero Facture" [(visible)]="showDialogOfNumeroFacture" [modal]="true">
+  <input type="text" pInputText placeholder="Numero Facture" [(ngModel)]="numero"><br>
+  <button pButton type="button" label="Submit" class="p-button-sm mt-2" (click)="facturer()"></button>
+</p-dialog>
 
 
 

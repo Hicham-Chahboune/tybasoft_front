@@ -7,7 +7,8 @@ export class Facture {
               public commande?: Command,
               public tva?: number,
               public paymentType?: number,
-              public date?:Date
+              public date?:Date,
+              public numero?:number
             ) {
             }
 }

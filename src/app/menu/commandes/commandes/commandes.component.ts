@@ -26,8 +26,14 @@ import { first, tap } from 'rxjs/operators';
   providers: [MessageService,ConfirmationService],
 })
 export class CommandesComponent implements OnInit {
-  commandes: Command[];
+
+  commandes: Command[]=[];
+  importedCommandes: Command[]=[];
+
   selectedCommandes: Command[];
+
+
+
   @ViewChild('fileUpload') importInput: FileUpload;
 
   constructor(
@@ -55,7 +61,7 @@ export class CommandesComponent implements OnInit {
 
     this.commandeService.delete(id).subscribe(res=>{
       this.commandes = this.commandes.filter(val => val.id !== id);
-      this.messageService.add({severity:'success', summary: 'Successful', detail: "L'article a été bien supprimé", life: 3000});
+      this.messageService.add({severity:'success', summary: 'Successful', detail: "La commande a été bien supprimé", life: 3000});
     })
   }
   readExcelFile(file: any) {
@@ -80,49 +86,83 @@ export class CommandesComponent implements OnInit {
     fileReader.readAsArrayBuffer(file);
   }
 
-  onExcelFileRead(table: CommandeHeaders[]) {
+  getLastIndexOfCommand(commandIndex:number[],nbItems:number){
+    if(commandIndex.length>1)return commandIndex[1]-1
+    else
+      return nbItems-1;
+  }
 
-    let commandes: Command[] = [];
-    let article = new Article();
+  getCommandLines(commandeLiness: CommandeHeaders[]){
+    let commandeLignes:LigneCommande[] = [];
 
-    for (let item of table) {
-      if (item['Référence commande']) {
-        let command:Command ={
-          reference:item['Référence commande'],
-          vendeur:{
-            mailProfess:item['Vendeur/Identifiant']
-          },
-          date:item['Date de la commande'],
-          client:{
-            externalId: parseInt(item['Client/ID'])
-          },
-          ligneCommandes:[]
-        }
-        commandes.push(command);
-        }
-        if(item['Lignes de la commande/Article/ID']){
-          if(commandes.length==0){
-            this.messageService.add({severity:'Error', summary: 'error', detail: "No command for this command line"});
-            return;
-          }
-          article.externalId=parseInt(item['Lignes de la commande/Article/ID'])
-          commandes[commandes.length -1].ligneCommandes?.push({
-            article,
-            qnt: item['Lignes de la commande/Quantité'],
-            sousTotal: item['Lignes de la commande/Total'],
-            prixVentReel: item['Lignes de la commande/Prix unitaire'],
-          });
-        }else{
-          this.messageService.add({severity:'error', summary: 'Error', detail: "Some error occured in the schema of your excel file, please export to visualize the correct schema"});
-          return;
-        }
+    for(let item of commandeLiness){
+      if(item['Lignes de la commande/Article/ID']){
+        let article:Article = {externalId:parseInt(item['Lignes de la commande/Article/ID'])};
+        commandeLignes.push({
+          article,
+          qnt: item['Lignes de la commande/Quantité'],
+          sousTotal: item['Lignes de la commande/Total'],
+          prixVentReel: item['Lignes de la commande/Prix unitaire'],
+        })
       }
-    this.commandeService.importCommandes(commandes).subscribe(e=>{
-      this.commandes.push(...e);
-      this.messageService.add({severity:'success', summary: 'Success', detail: "Imported successfully"});
-    },err=>{
-      this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message});
-    })
+    }
+    return commandeLignes
+  }
+
+  isCommandeImportedExist(reference:string){
+    if(this.commandes.length!=0 && this.commandes.filter(e=>e.reference==reference).length!=0)return true;
+    else if(this.importedCommandes.length!=0 && this.importedCommandes.filter(e=>e.reference==reference).length!=0)return true;
+    return false
+  }
+
+
+  onExcelFileRead(table: CommandeHeaders[]) {
+    let commandIndex:number[]=[];
+
+    table.forEach((e,index)=>{ if(e['Référence commande'])commandIndex.push(index)})
+
+    while(commandIndex.length>0){
+      let i = commandIndex[0]
+      let j = this.getLastIndexOfCommand(commandIndex,table.length);
+
+
+      let item = table[i]
+
+      if(this.isCommandeImportedExist(item['Référence commande'])){
+        commandIndex.shift()
+        continue;
+      }
+
+      let ligneCommandes:LigneCommande[]= this.getCommandLines(table.slice(i,j));
+
+      let command:Command ={
+        reference:item['Référence commande'],
+        vendeur:{
+          nomComplet:item['Vendeur/Nom'],
+          mailProfess:item['Vendeur/Identifiant']
+        },
+        date:item['Date de la commande'],
+        client:{
+          externalId: parseInt(item['Client/ID'])
+        },
+        ligneCommandes
+      }
+      this.importedCommandes.push(command);
+      commandIndex.shift()
+    }
+
+    if(this.importedCommandes.length!=0){
+      this.commandeService.importCommandes(this.importedCommandes).subscribe(e=>{
+        this.commandes = [...this.commandes,...e];
+        this.messageService.add({severity:'success', summary: 'Success', detail: "Imported successfully"});
+        this.importedCommandes = []
+      },err=>{
+        this.messageService.add({severity:'error', summary: 'Error', detail: "Something Wrong!"});
+      })
+    }else{
+      this.messageService.add({severity:'warn', summary: '', detail: "Nothing to import"});
+    }
+
   }
 
   exportExcel() {}
@@ -133,11 +173,12 @@ interface CommandeHeaders {
   "Référence commande": string;
   "Date de la commande": Date;
   "Client/ID": string;
-  "Vendeur/Identifiant": string;
+  "Vendeur/Nom": string;
   "Lignes de la commande/Article/ID": string;
   "Lignes de la commande/Quantité": number;
   "Lignes de la commande/Total": number;
-  "Lignes de la commande/Prix unitaire":number
+  "Lignes de la commande/Prix unitaire":number;
+  "Vendeur/Identifiant":string;
 }
 
 

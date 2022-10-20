@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationType } from 'src/app/config/notification-type.enum';
@@ -16,13 +17,16 @@ export class DetailCommandeComponent implements OnInit {
 
   totalReglements: number = 0;
 
-  showDialog = false;
+  showDialogOfNumeroFacture = false;
+
+  numero:number
 
 
   constructor( private commandeService:CommandeService,
                private router:Router,
                private route: ActivatedRoute,
-               private factureService:FactureService
+               private factureService:FactureService,
+               private messageService:MessageService
              ) {
 
    }
@@ -54,21 +58,30 @@ export class DetailCommandeComponent implements OnInit {
     })
   }
   hideDialog(){
-    this.showDialog = false
+    //this.showDialog = false
   }
   saveFacture(){
-    if(!this.commande.client.ice){
+    if(!this.commande.client.ice)
       this.router.navigateByUrl("/app/clients/"+this.commande.client.externalId+"?return="+this.router.url)
-    }else{
+    else
+       this.showDialogOfNumeroFacture = true;
+
+  }
+  facturer(){
+    console.log(this.numero)
+    if(this.numero){
+      this.showDialogOfNumeroFacture=false
       let facture : Facture = {
         commande:this.commande,
-        tva:20
+        tva:20,
+        numero:this.numero
       }
       this.factureService.create(facture).subscribe(facture=>{
-        this.commande.nbFactures++
         this.router.navigateByUrl(`/app/factures/${facture.id}`)
       })
+    }else{
+      this.messageService.add({severity:'error', summary: 'Error', detail: "N° de facture ne peut pas être null", life: 2000});
     }
-    this.showDialog=false
+
   }
 }

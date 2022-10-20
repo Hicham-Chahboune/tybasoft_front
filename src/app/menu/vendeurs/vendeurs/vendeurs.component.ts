@@ -16,7 +16,7 @@ export class VendeursComponent implements OnInit {
 
   vendeurs: Vendeur[] = [] ;
 
-  importedClients:Vendeur[]=[];
+  importedVendeurs:Vendeur[]=[];
 
 
   submitted!: boolean;
@@ -48,15 +48,21 @@ export class VendeursComponent implements OnInit {
     return $event.target.value;
   }
 
-  exportExcel() {
-    import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.vendeurs);
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, "clients");
-    });
-}
 
+exportExcel() {
+  import("xlsx").then(xlsx => {
+      const worksheet = xlsx.utils.json_to_sheet(this.vendeurs.map(e=>{
+        return {
+          "Nom": e.nomComplet,
+          'Identifiant': e.mailProfess,
+          'Vendeur/Téléphone': e.telProfess
+                }
+      }));
+      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      this.saveAsExcelFile(excelBuffer, "vendeurs");
+  });
+}
 saveAsExcelFile(buffer: any, fileName: string): void {
     let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     let EXCEL_EXTENSION = '.xlsx';
@@ -96,22 +102,34 @@ readExcelFile (file: any){
 
   fileReader.readAsArrayBuffer(file);
 }
+
+
+
 onExcelFileRead(table: VendeurHeaders[]){
-  console.log(table)
   for (let vendeur of table) {
+    if(this.isVendorImportedExist(vendeur.Identifiant)) continue
       let c : Vendeur = {
         nomComplet:vendeur.Nom,
         mailProfess:vendeur.Identifiant,
         telProfess:vendeur['Vendeur/Téléphone']
       }
-      this.importedClients.push(c);
+      this.importedVendeurs.push(c);
   }
-  this.vendeurService.importClient(this.importedClients).subscribe(e=>{
-    this.vendeurs = this.importedClients
-    this.importedClients=[]
-  })
+  if(this.importedVendeurs.length!=0){
+    this.vendeurService.importClient(this.importedVendeurs).subscribe(e=>{
+      this.vendeurs = [...this.vendeurs,...this.importedVendeurs];
+      this.messageService.add({severity:'success', summary: 'Success', detail: "imported successfully", life: 2000});
+      this.importedVendeurs=[]
+    },err=>{
+      this.messageService.add({severity:'error', summary: 'Error', detail: "Something Wrong please try again", life: 2000});
+    })
+  }
 }
-
+isVendorImportedExist(identifiant:string){
+  if(this.vendeurs.filter(e=>e.mailProfess==identifiant).length!=0)return true;
+  else if(this.importedVendeurs.filter(e=>e.mailProfess==identifiant).length!=0)return true;
+  return false
+}
 
 }
 interface VendeurHeaders {

@@ -43,7 +43,6 @@ export class ClientsComponent implements OnInit {
   ngOnInit() {
     this.clientService.getAll().subscribe(clients=>{
         this.clients = clients
-        console.log(clients)
     })
 
   }
@@ -59,13 +58,22 @@ export class ClientsComponent implements OnInit {
     return $event.target.value;
   }
 
-  exportExcel() {
-    import("xlsx").then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.clients);
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, "clients");
-    });
+
+exportExcel() {
+  import("xlsx").then(xlsx => {
+      const worksheet = xlsx.utils.json_to_sheet(this.clients.map(e=>{
+        return {
+          'Afficher Nom': e.nomComplet,
+          'Compte client/ID':e.externalId,
+          "Référence": e.ice,
+          "Adresse complète": e.adresseComplete,
+          "Téléphone": e.tel
+                }
+      }));
+      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      this.saveAsExcelFile(excelBuffer, "clients");
+  });
 }
 
 saveAsExcelFile(buffer: any, fileName: string): void {
@@ -77,10 +85,8 @@ saveAsExcelFile(buffer: any, fileName: string): void {
     saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
 }
 
-//import
 
 onFileSelected(event: any) {
-  console.log(this.importInput)
   this.readExcelFile(event.currentFiles[0]);
   this.importInput.clear()
 }
@@ -109,26 +115,35 @@ readExcelFile (file: any){
 }
 
 
-onExcelFileRead(table: ClientHeaders[]){
-  for (let client of table) {
-      let c : Client = {
-        externalId:client['Compte client/ID'],
-        nomComplet:client['Afficher Nom'],
-        ice:client.Référence,
-        tel:client.Téléphone,
-        adresseComplete:client['Adresse complète']
-      }
-      this.importedClients.push(c);
-  }
-  this.clientService.importClient(this.importedClients).subscribe(e=>{
-    this.clients=this.importedClients
-    console.log(this.clients)
-    this.importedClients=[]
-  },err=>{
-    this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message, life: 2000});
-  })
-}
 
+
+onExcelFileRead(table: ClientHeaders[]){
+    for (let client of table) {
+      if(this.isClientImportedExist(client['Compte client/ID'])) continue
+      let c : Client = {
+          externalId:client['Compte client/ID'],
+          nomComplet:client['Afficher Nom'].replace(/[\n\r]+/g, "\n"),
+          ice:client.Référence,
+          tel:client.Téléphone,
+          adresseComplete:client['Adresse complète'].replace(/[\n\r]+/g, "\n")
+        }
+        this.importedClients.push(c);
+    }
+    if(this.importedClients.length!=0){
+      this.clientService.importClient(this.importedClients).subscribe(e=>{
+        this.clients = [...this.clients,...this.importedClients];
+        this.messageService.add({severity:'success', summary: 'Success', detail: "Clients imported successfully", life: 2000});
+        this.importedClients=[]
+      },err=>{
+        this.messageService.add({severity:'error', summary: 'Error', detail: "Something Wrong please try again", life: 2000});
+      })
+    }
+}
+isClientImportedExist(externId:number){
+  if(this.clients.filter(e=>e.externalId==externId).length!=0)return true;
+  else if(this.importedClients.filter(e=>e.externalId==externId).length!=0)return true;
+  return false
+}
 
 }
 interface ClientHeaders {

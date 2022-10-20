@@ -120,9 +120,6 @@ export class ArticlesComponent implements OnInit {
   hideDialog() {
        this.articleDialog = false;
   }
-
-
-
   findIndexById(id: string): number {
        let index = -1;
        for (let i = 0; i < this.articles.length; i++) {
@@ -158,10 +155,7 @@ saveAsExcelFile(buffer: any, fileName: string): void {
     saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
 }
 
-//import
-
 onFileSelected(event: any) {
-  console.log(this.importInput)
   this.readExcelFile(event.currentFiles[0]);
   this.importInput.clear()
 }
@@ -185,7 +179,6 @@ readExcelFile (file: any){
       resultedArraylist = XLSX.utils.sheet_to_json(worksheet,{raw:true});
       this.onExcelFileRead(resultedArraylist)
   }
-
   fileReader.readAsArrayBuffer(file);
 }
 
